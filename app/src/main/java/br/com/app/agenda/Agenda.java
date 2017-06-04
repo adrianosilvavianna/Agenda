@@ -12,6 +12,11 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.List;
+
+import br.com.app.agenda.dao.AlunoDAO;
+import br.com.app.agenda.modelo.Aluno;
+
 public class Agenda extends AppCompatActivity {
 
     @Override
@@ -21,9 +26,13 @@ public class Agenda extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String[] alunos = {"ADRIANO", "THALLYTA", "JOAO", "ADRIANO", "THALLYTA", "JOAO", "ADRIANO", "THALLYTA", "JOAO", "ADRIANO", "THALLYTA", "JOAO", "ADRIANO", "THALLYTA", "JOAO"};
+        AlunoDAO dao = new AlunoDAO(this);
+        List<Aluno> alunos = dao.buscaAlunos();
+        dao.close();
+
+
         ListView listaAlunos = (ListView) findViewById(R.id.lista_alunos);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alunos);
+        ArrayAdapter<Aluno> adapter = new ArrayAdapter<Aluno>(this, android.R.layout.simple_list_item_1, alunos);
 
         listaAlunos.setAdapter(adapter);
 
