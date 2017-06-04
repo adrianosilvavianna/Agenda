@@ -1,8 +1,11 @@
 package br.com.app.agenda.dao;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import br.com.app.agenda.modelo.Aluno;
 
 /**
  * Created by Adriano on 28/05/2017.
@@ -16,16 +19,31 @@ public class AlunoDAO extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        String sql = "CREATE TABLE Alunos (id INTEGER PRIMARY KEY, nome TEXT NOT NULL, endereco TEXT, telefone TEXT, site TEXT, nota REAL);";
+        db.execSQL(sql);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        String sql = "DROP TABLE IF EXISTS Alunos";
+        db.execSQL(sql);
+        onCreate(db);
     }
 
-    //conexao com o banco
+    public void insere(Aluno aluno)  {
+        SQLiteDatabase db = getWritableDatabase();                  //referencia do banco
+
+        ContentValues dados  = new ContentValues();
+        dados.put("nome", aluno.getNome());                         // dados.put("Coluna_tabela", valor);
+        dados.put("endereco", aluno.getEndereco());
+        dados.put("telefone", aluno.getTelefone());
+        dados.put("site", aluno.getSite());
+        dados.put("nota", aluno.getNota());
+
+        db.insert("Alunos", null, dados);
+    }
 
 
 
 }
+
