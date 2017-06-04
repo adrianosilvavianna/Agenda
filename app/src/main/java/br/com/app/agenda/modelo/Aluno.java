@@ -63,6 +63,6 @@ public class Aluno {
 
     @Override
     public String toString() {
-        return getId()+ " - " +getNome();
+        return getId()+ " - " +getNome() + " -> " + getNota();
     }
 }
