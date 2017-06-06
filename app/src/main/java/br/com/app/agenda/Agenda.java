@@ -31,6 +31,18 @@ public class Agenda extends AppCompatActivity {
 
         listaAlunos = (ListView) findViewById(R.id.lista_alunos);
 
+        listaAlunos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View item, int position, long id) {
+
+                Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(position);
+
+                Intent goFormulario = new Intent(Agenda.this, Fomulario.class);
+                goFormulario.putExtra("aluno", aluno);
+                startActivity(goFormulario);
+            }
+        });
+
         registerForContextMenu(listaAlunos);
 
     }

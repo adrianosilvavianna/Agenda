@@ -16,6 +16,7 @@ public class FormularioHelper {
     private final EditText campoTelefone;
     private final EditText campoEndereco;
     private final EditText campoNome;
+    private Aluno aluno;
 
     public FormularioHelper(Fomulario activity)
     {
@@ -30,10 +31,10 @@ public class FormularioHelper {
         String telefone = campoTelefone.getText().toString();
         String site      = campoSite.getText().toString();
 
+        aluno = new Aluno();
     }
 
     public Aluno getAluno() {
-        Aluno aluno = new Aluno();
 
         aluno.setNome(campoNome.getText().toString());
         aluno.setEndereco(campoEndereco.getText().toString());
@@ -42,5 +43,14 @@ public class FormularioHelper {
         aluno.setNota(Double.valueOf(campoNota.getProgress()));
 
         return aluno;
+    }
+
+    public void preencheFormulario(Aluno aluno) {
+        campoNome.setText(aluno.getNome());
+        campoEndereco.setText(aluno.getEndereco());
+        campoTelefone.setText(aluno.getTelefone());
+        campoSite.setText(aluno.getSite());
+        campoNota.setProgress(aluno.getNota().intValue());
+        this.aluno = aluno;
     }
 }
