@@ -79,7 +79,7 @@ public class Contato extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         final Aluno aluno = (Aluno) listaContatos.getItemAtPosition(info.position);
 
-        MenuItem itemLigar = menu.add("LIgar");
+        MenuItem itemLigar = menu.add("Ligar");
         itemLigar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
