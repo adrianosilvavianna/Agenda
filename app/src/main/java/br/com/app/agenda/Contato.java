@@ -1,19 +1,19 @@
 package br.com.app.agenda;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Bundle;
-import android.provider.Browser;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.os.Bundle;
 import android.view.ContextMenu;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -22,44 +22,30 @@ import java.util.List;
 import br.com.app.agenda.dao.AlunoDAO;
 import br.com.app.agenda.modelo.Aluno;
 
-public class Agenda extends AppCompatActivity {
+public class Contato extends AppCompatActivity {
 
-    private ListView listaAlunos;
+    private ListView listaContatos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_agenda);
+        setContentView(R.layout.activity_contato);
 
-        listaAlunos = (ListView) findViewById(R.id.lista_alunos);
+        listaContatos = (ListView) findViewById(R.id.lista_contatos);
 
-        listaAlunos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listaContatos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View item, int position, long id) {
 
-                Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(position);
+                Aluno aluno = (Aluno) listaContatos.getItemAtPosition(position);
 
-                Intent goFormulario = new Intent(Agenda.this, Fomulario.class);
+                Intent goFormulario = new Intent(Contato.this, Fomulario.class);
                 goFormulario.putExtra("aluno", aluno);
                 startActivity(goFormulario);
             }
         });
 
-        registerForContextMenu(listaAlunos);
-
-    }
-
-    private void floatActionButton() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent goFormulario = new Intent(Agenda.this, Fomulario.class);
-                startActivity(goFormulario);
-            }
-        });
+        registerForContextMenu(listaContatos);
     }
 
     private void carregarLista() {
@@ -68,21 +54,46 @@ public class Agenda extends AppCompatActivity {
         dao.close();
 
         ArrayAdapter<Aluno> adapter = new ArrayAdapter<Aluno>(this, android.R.layout.simple_list_item_1, alunos);
-        listaAlunos.setAdapter(adapter);
+        listaContatos.setAdapter(adapter);
     }
 
-    @Override
     protected void onResume() {
         super.onResume();
+        floatButton();
         carregarLista();
-        floatActionButton();
     }
 
-    @Override
+    private void floatButton() {
+        Button buttonPlus = (Button) findViewById(R.id.plus);
+        buttonPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goFormulario = new Intent(Contato.this, Fomulario.class);
+                startActivity(goFormulario);
+            }
+        });
+    }
+
     public void onCreateContextMenu(ContextMenu menu, View v, final ContextMenu.ContextMenuInfo menuInfo) {
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        final Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(info.position);
+        final Aluno aluno = (Aluno) listaContatos.getItemAtPosition(info.position);
+
+        MenuItem itemLigar = menu.add("LIgar");
+        itemLigar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if(ActivityCompat.checkSelfPermission(Contato.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(Contato.this, new String[]{Manifest.permission.CALL_PHONE}, 123);
+                }else {
+                    Intent intentLigar = new Intent(Intent.ACTION_CALL);
+                    intentLigar.setData(Uri.parse("tel:" + aluno.getTelefone()));
+                    startActivity(intentLigar);
+                }
+
+                return false;
+            }
+        });
 
         MenuItem itemSMS = menu.add("Enviar SMS");
         Intent intentSMS = new Intent(Intent.ACTION_VIEW);
@@ -112,11 +123,11 @@ public class Agenda extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
-                AlunoDAO dao = new AlunoDAO(Agenda.this);
+                AlunoDAO dao = new AlunoDAO(Contato.this);
                 dao.deleta(aluno);
                 dao.close();
 
-                Toast.makeText(Agenda.this, "Aluno Excluido ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Contato.this, "Contato Excluido ", Toast.LENGTH_SHORT).show();
                 carregarLista();
                 return false;
             }
@@ -144,4 +155,5 @@ public class Agenda extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

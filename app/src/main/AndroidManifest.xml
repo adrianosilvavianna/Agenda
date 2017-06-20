@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.com.app.agenda">
 
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,20 +13,21 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Agenda"
-            android:label="@string/app_name"
+            android:label="Contatos"
             android:theme="@style/AppTheme.NoActionBar">
 
+        </activity>
+        <activity
+            android:name=".Fomulario"
+            android:label="Formulario"></activity>
+        <activity
+            android:name=".Contato"
+            android:label="Contatos">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-        </activity>
-        <activity
-            android:name=".Fomulario"
-            android:label="Formulario">
-
         </activity>
     </application>
 
